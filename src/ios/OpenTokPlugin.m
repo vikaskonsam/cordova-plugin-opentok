@@ -203,6 +203,13 @@
         // Set depth location of camera view based on CSS z-index.
         _publisher.view.layer.zPosition = zIndex;
 
+         /* Custom fix by zool for clickable buttons */        
+        _publisher.view.userInteractionEnabled = YES;
+
+        if(zIndex < 0) {
+            _publisher.view.userInteractionEnabled = NO;
+        }
+        
         // If the zIndex is 0(default) bring the view to the top, last one wins.
         // See: https://github.com/saghul/cordova-plugin-iosrtc/blob/5b6a180b324c8c9bac533fa481a457b74183c740/src/PluginMediaStreamRenderer.swift#L191
         if(zIndex == 0) {
@@ -219,6 +226,12 @@
 
         // Set depth location of camera view based on CSS z-index.
         streamInfo.view.layer.zPosition = zIndex;
+
+        /* Custom fix by zool for clickable buttons */        
+        streamInfo.view.userInteractionEnabled = YES;
+        if(zIndex < 0) {
+            streamInfo.view.userInteractionEnabled = NO;
+        }
 
         // If the zIndex is 0(default) bring the view to the top, last one wins.
         // See: https://github.com/saghul/cordova-plugin-iosrtc/blob/5b6a180b324c8c9bac533fa481a457b74183c740/src/PluginMediaStreamRenderer.swift#L191
@@ -403,6 +416,9 @@
     OTSubscriber* sub = [[OTSubscriber alloc] initWithStream:myStream delegate:self];
     sub.audioLevelDelegate = self;
     sub.networkStatsDelegate = self;
+    // added by Zool to scale video to contain 
+    sub.viewScaleBehavior = OTVideoViewScaleBehaviorFit;
+    
     [_session subscribe:sub error:nil];
 
     if ([[command.arguments objectAtIndex:6] isEqualToString:@"false"]) {
